@@ -78,7 +78,7 @@ public class cliApp {
 
                 case DEPOSIT:
                     toDeposit();
-                    screen = DASHBOARD;
+                    screen = DASHBOARD; 
                     break;
 
                 case WITHDRAWALS:
@@ -118,7 +118,7 @@ public class cliApp {
                         break;
                     }
                 }
-                System.out.print("Current Account Balance: " + accounts[index][2]);
+                System.out.println("Current Account Balance: " + accounts[index][2]);
 
             } while (!valid);
 
@@ -128,7 +128,7 @@ public class cliApp {
                 withdraw = SCANNER.nextDouble();
                 SCANNER.nextLine();
                 if (withdraw < 100) {
-                    System.out.println("Minimum withdrawal amount should be Rs.500.");
+                    System.out.println("Minimum withdrawal amount should be Rs.100.");
                     valid = false;
                     continue;
                 }
@@ -145,7 +145,7 @@ public class cliApp {
 
             System.out.print("Do you want to continue(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
-            valid = response.equals('Y');
+            valid = response.equals("Y");
         } while (valid);
 
     }
@@ -166,7 +166,7 @@ public class cliApp {
                         break;
                     }
                 }
-                System.out.print("Current Account Balance: " + accounts[index][2]);
+                System.out.println("Current Account Balance: " + accounts[index][2]);
 
             } while (!valid);
             do {
@@ -187,7 +187,7 @@ public class cliApp {
 
             System.out.print("Do you want to continue(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
-            valid = response.equals('Y');
+            valid = response.equals("Y");
 
         } while (valid);
 
@@ -206,7 +206,8 @@ public class cliApp {
                 break;
             } else {
                 for (int i = 0; i < accounts.length; i++) {
-                    if (input == accounts[i][0]) {
+                    System.out.println(accounts[i][0]);
+                    if (input.equals(accounts[i][0])) {
                         valid = true;
                         break;
 
@@ -270,15 +271,17 @@ public class cliApp {
             newAccounts[newAccounts.length - 1][2] = deposit + "";
 
             accounts = newAccounts;
-            System.out.println(Arrays.toString(accounts[0]));
+            // System.out.println(Arrays.toString(accounts[0]));
             genId++;
             System.out.printf(SUCCESS_MSG,
                     String.format("%s account has been created successfully", id));
 
             System.out.print("\tDo you want to continue adding (Y/N)?");
             response = SCANNER.nextLine().strip();
+            response = SCANNER.nextLine().strip().toUpperCase();
+            // response="Y";
 
-            Thread.sleep(5000);
+            // Thread.sleep(5000);
 
         } while (response.equals("Y"));
 
