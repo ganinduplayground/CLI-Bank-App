@@ -132,9 +132,6 @@ public class cliApp {
                 continue loop1;
 
             } else {
-                System.out.println(accounts[0][1]);
-                System.out.println(accounts[1][1]);
-                System.out.println(accounts[2][1]);
                 
                 String[][] newAccounts = new String[accounts.length - 1][3];
 
@@ -147,9 +144,6 @@ public class cliApp {
                 }
 
                 accounts = newAccounts;
-                System.out.println(accounts[0][1]);
-                System.out.println(accounts[1][1]);
-                // System.out.println(accounts[2][1]);
 
             }
             System.out.printf(SUCCESS_MSG, "Successfully deleted.");
@@ -237,6 +231,13 @@ public class cliApp {
             double transferAmount = SCANNER.nextDouble();
             double sender = Double.parseDouble(accounts[index][2]);
             sender -= (transferAmount + transferAmount * 0.02);
+
+            if(sender<1000){
+                System.out.printf(ERROR_MSG, "Insufficient account balance");
+                continue loop1;
+            }
+
+            
             double reciever = Double.parseDouble(accounts[toIndex][2]);
             reciever += transferAmount;
             accounts[index][2] = sender + "";
