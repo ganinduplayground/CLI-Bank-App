@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Scanner;
 
 public class cliApp {
@@ -78,7 +76,7 @@ public class cliApp {
 
                 case DEPOSIT:
                     toDeposit();
-                    screen = DASHBOARD; 
+                    screen = DASHBOARD;
                     break;
 
                 case WITHDRAWALS:
@@ -87,9 +85,13 @@ public class cliApp {
                     break;
 
                 case TRANSFER:
+                    transfer();
+                    screen = DASHBOARD;
                     break;
 
                 case CHECK_ACC_BALANCE:
+                    toCheckAccountBalance();
+                    screen = DASHBOARD;
                     break;
 
                 case DELETE_ACCOUNT:
@@ -100,6 +102,97 @@ public class cliApp {
             }
 
         } while (true);
+    }
+
+    private static void toCheckAccountBalance() {
+
+        loop1: do {
+            valid = false;
+            System.out.print("Enter Account Number: ");
+            id = SCANNER.nextLine().strip();
+
+            valid = isValidAccNumber(id);
+            if (!valid)
+                continue loop1;
+            for (int i = 0; i < accounts.length; i++) {
+                if (id.equals(accounts[i][0])) {
+                    index = i;
+                    break;
+                }
+            }
+            System.out.println("Name: " + accounts[index][1]);
+            System.out.println("Current Account Balance: " + accounts[index][2]);
+
+            System.out.print("Do you want to go DashBoard?(Y/N): ");
+            String response = SCANNER.nextLine().strip().toUpperCase();
+            valid = response.equals("Y");
+
+        } while (!valid);
+    }
+
+    
+
+
+
+    private static void transfer() {
+        String idToTransfer;
+        int toIndex=0;
+        loop1:
+        do{
+             System.out.print("Enter Account Number from Transfer: ");
+            id = SCANNER.nextLine().strip();
+
+            valid = isValidAccNumber(id);
+            if (!valid)
+                continue loop1;
+            for (int i = 0; i < accounts.length; i++) {
+                if (id.equals(accounts[i][0])) {
+                    index = i;
+                    break;
+                }
+            }
+            System.out.println("Name: " + accounts[index][1]);
+            System.out.println("Current Account Balance: " + accounts[index][2]);
+
+            loop2:
+            do{
+            System.out.print("Enter Account Number to Transfer:");
+            idToTransfer = SCANNER.nextLine().strip();
+
+            valid = isValidAccNumber(idToTransfer);
+            if (!valid)
+                continue loop2;
+            for (int i = 0; i < accounts.length; i++) {
+                if (idToTransfer.equals(accounts[i][0]) ) {
+                    toIndex = i;
+                    break;
+                }
+            }
+            System.out.println("Name: " + accounts[toIndex][1]);
+            System.out.println("Current Account Balance: " + accounts[toIndex][2]);
+            }while(!valid);
+
+            System.out.print("Enter amount to Transfer: ");
+            double transferAmount = SCANNER.nextDouble();
+            double sender = Double.parseDouble(accounts[index][2]);
+            sender-= (transferAmount+transferAmount*0.02);
+            double reciever = Double.parseDouble(accounts[toIndex][2]);
+            reciever+=transferAmount;
+            accounts[index][2]= sender+"";
+            accounts[toIndex][2]=reciever+"";
+
+            System.out.printf("Sender's Account Number: %s\nSender's Name: %s\nSender's current Account Balance: %s\n", accounts[index][0],accounts[index][1],accounts[index][2]);
+            System.out.println();
+            System.out.printf("Reciever's Account Number: %s\nReciever's Name: %s\nReciever's current Account Balance: %s\n", accounts[toIndex][0],accounts[toIndex][1],accounts[toIndex][2]);
+            
+            System.out.print("Do you want to continue(Y/N): ");
+            String response = SCANNER.nextLine().strip().toUpperCase();
+            response = SCANNER.nextLine().strip().toUpperCase();
+            valid = response.equals("Y");
+
+
+
+        }while(!valid);
     }
 
     private static void toWithdraw() {
@@ -113,11 +206,12 @@ public class cliApp {
                 if (!valid)
                     continue loop1;
                 for (int i = 0; i < accounts.length; i++) {
-                    if (id == accounts[i][0]) {
+                    if (id.equals(accounts[i][0])) {
                         index = i;
                         break;
                     }
                 }
+                System.out.println("Name: " + accounts[index][1]);
                 System.out.println("Current Account Balance: " + accounts[index][2]);
 
             } while (!valid);
@@ -161,11 +255,12 @@ public class cliApp {
                 if (!valid)
                     continue loop1;
                 for (int i = 0; i < accounts.length; i++) {
-                    if (id == accounts[i][0]) {
+                    if (id.equals(accounts[i][0])) {
                         index = i;
                         break;
                     }
                 }
+                System.out.println("Name: " + accounts[index][1]);
                 System.out.println("Current Account Balance: " + accounts[index][2]);
 
             } while (!valid);
@@ -206,7 +301,7 @@ public class cliApp {
                 break;
             } else {
                 for (int i = 0; i < accounts.length; i++) {
-                    System.out.println(accounts[i][0]);
+                   
                     if (input.equals(accounts[i][0])) {
                         valid = true;
                         break;
