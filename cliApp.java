@@ -132,6 +132,9 @@ public class cliApp {
                 continue loop1;
 
             } else {
+                System.out.println(accounts[0][1]);
+                System.out.println(accounts[1][1]);
+                System.out.println(accounts[2][1]);
                 
                 String[][] newAccounts = new String[accounts.length - 1][3];
 
@@ -139,11 +142,14 @@ public class cliApp {
                     newAccounts[i] = accounts[i];
                 }
 
-                for (int i = index + 1; i < newAccounts.length; i++) {
-                    newAccounts[i] = accounts[i];
+                for (int i = index; i < newAccounts.length; i++) {
+                    newAccounts[i] = accounts[i+1];
                 }
 
                 accounts = newAccounts;
+                System.out.println(accounts[0][1]);
+                System.out.println(accounts[1][1]);
+                // System.out.println(accounts[2][1]);
 
             }
             System.out.printf(SUCCESS_MSG, "Successfully deleted.");
@@ -235,12 +241,13 @@ public class cliApp {
             reciever += transferAmount;
             accounts[index][2] = sender + "";
             accounts[toIndex][2] = reciever + "";
+            System.out.println();
 
-            System.out.printf("\tSender's Account Number: %s\nSender's Name: %s\nSender's current Account Balance: %s\n",
+            System.out.printf("\tSender's Account Number: %s\n\tSender's Name: %s\n\tSender's current Account Balance: %s\n",
                     accounts[index][0], accounts[index][1], accounts[index][2]);
             System.out.println();
             System.out.printf(
-                    "\tReciever's Account Number: %s\nReciever's Name: %s\nReciever's current Account Balance: %s\n",
+                    "\tReciever's Account Number: %s\n\tReciever's Name: %s\n\tReciever's current Account Balance: %s\n\n",
                     accounts[toIndex][0], accounts[toIndex][1], accounts[toIndex][2]);
 
             System.out.printf(SUCCESS_MSG, "Successfully transfered.");
