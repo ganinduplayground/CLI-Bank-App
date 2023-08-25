@@ -15,23 +15,21 @@ public class cliApp {
     static int index;
     static double deposit;
 
+    static final String CLEAR = "\033[H\033[2J";
+    static final String COLOR_BLUE_BOLD = "\033[34;1m";
+    static final String DASHBOARD = "Welcome to Smart Banking";
+    static String screen = DASHBOARD;
+    static final String CREATE_NEW_ACCOUNT = "Create New Account";
+    static final String DEPOSIT = "Deposit";
+    static final String WITHDRAWALS = "Withdrawals";
+    static final String TRANSFER = "Transfer";
+    static final String CHECK_ACC_BALANCE = "Check Account Balance";
+    static final String DELETE_ACCOUNT = "Delete Account";
+    static final String APP_TITLE = String.format("%s%s%s", COLOR_BLUE_BOLD, screen, RESET);
+
     public static void main(String[] args) throws InterruptedException {
-        final String CLEAR = "\033[H\033[2J";
-        final String COLOR_BLUE_BOLD = "\033[34;1m";
-
-        final String DASHBOARD = "Welcome to Smart Banking";
-        final String CREATE_NEW_ACCOUNT = "Create New Account";
-        final String DEPOSIT = "Deposit";
-        final String WITHDRAWALS = "Withdrawals";
-        final String TRANSFER = "Transfer";
-        final String CHECK_ACC_BALANCE = "Check Account Balance";
-        final String DELETE_ACCOUNT = "Delete Account";
-
-        String screen = DASHBOARD;
 
         do {
-            final String APP_TITLE = String.format("%s%s%s",
-                    COLOR_BLUE_BOLD, screen, RESET);
 
             System.out.println(CLEAR);
             System.out.println("\t" + APP_TITLE + "\n");
@@ -95,6 +93,8 @@ public class cliApp {
                     break;
 
                 case DELETE_ACCOUNT:
+                    toDeleteAccount();
+                    screen = DASHBOARD;
                     break;
 
                 default:
@@ -104,16 +104,69 @@ public class cliApp {
         } while (true);
     }
 
+    private static void toDeleteAccount() {
+        String response2 = "";
+        loop1: do {
+            System.out.print("\tEnter account number to delete: ");
+            id = SCANNER.nextLine();
+
+            valid = isValidAccNumber(id);
+            if (!valid) {
+                System.out.printf(ERROR_MSG, "Invalid Account Number");
+                continue loop1;
+            }
+            for (int i = 0; i < accounts.length; i++) {
+                if (id.equals(accounts[i][0])) {
+                    index = i;
+                    break;
+                }
+            }
+            System.out.println("\tName: " + accounts[index][1]);
+            System.out.println("\tCurrent Account Balance: " + accounts[index][2]);
+
+            System.out.print("\tAre you sure to delete this account? ");
+            String response = SCANNER.nextLine().strip().toUpperCase();
+            if (!response.equals("Y")) {
+                System.out.println(CLEAR);
+                System.out.println("\t" + APP_TITLE + "\n");
+                continue loop1;
+
+            } else {
+                
+                String[][] newAccounts = new String[accounts.length - 1][3];
+
+                for (int i = 0; i < index; i++) {
+                    newAccounts[i] = accounts[i];
+                }
+
+                for (int i = index + 1; i < newAccounts.length; i++) {
+                    newAccounts[i] = accounts[i];
+                }
+
+                accounts = newAccounts;
+
+            }
+            System.out.printf(SUCCESS_MSG, "Successfully deleted.");
+            System.out.println();
+
+            System.out.print("\tDo you want to continue?(Y/N): ");
+            response2 = SCANNER.nextLine().strip().toUpperCase();
+            System.out.println(CLEAR);
+            System.out.println("\t" + APP_TITLE + "\n");
+
+        } while (response2.equals("Y"));
+    }
+
     private static void toCheckAccountBalance() {
 
         loop1: do {
             valid = true;
-            System.out.print("Enter Account Number: ");
+            System.out.print("\tEnter Account Number: ");
             id = SCANNER.nextLine().strip();
 
             valid = isValidAccNumber(id);
-            if (!valid){
-                 System.out.printf(ERROR_MSG, "Invalid Account Number");
+            if (!valid) {
+                System.out.printf(ERROR_MSG, "Invalid Account Number");
                 continue loop1;
             }
             for (int i = 0; i < accounts.length; i++) {
@@ -122,30 +175,27 @@ public class cliApp {
                     break;
                 }
             }
-            System.out.println("Name: " + accounts[index][1]);
-            System.out.println("Current Account Balance: " + accounts[index][2]);
+            System.out.println("\tName: " + accounts[index][1]);
+            System.out.println("\tCurrent Account Balance: " + accounts[index][2]);
 
-            System.out.print("Do you want to continue?(Y/N): ");
+            System.out.print("\tDo you want to continue?(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
             valid = response.equals("Y");
+            System.out.println(CLEAR);
+            System.out.println("\t" + APP_TITLE + "\n");
 
         } while (valid);
     }
 
-    
-
-
-
     private static void transfer() {
         String idToTransfer;
-        int toIndex=0;
-        loop1:
-        do{
-             System.out.print("Enter Account Number from Transfer: ");
+        int toIndex = 0;
+        loop1: do {
+            System.out.print("\tEnter Account Number from Transfer: ");
             id = SCANNER.nextLine().strip();
 
             valid = isValidAccNumber(id);
-            if (!valid){
+            if (!valid) {
                 System.out.printf(ERROR_MSG, "Invalid Account Number");
                 continue loop1;
             }
@@ -155,61 +205,66 @@ public class cliApp {
                     break;
                 }
             }
-            System.out.println("Name: " + accounts[index][1]);
-            System.out.println("Current Account Balance: " + accounts[index][2]);
+            System.out.println("\tName: " + accounts[index][1]);
+            System.out.println("\tCurrent Account Balance: " + accounts[index][2]);
 
-            loop2:
-            do{
-            System.out.print("Enter Account Number to Transfer:");
-            idToTransfer = SCANNER.nextLine().strip();
+            loop2: do {
+                System.out.print("\tEnter Account Number to Transfer:");
+                idToTransfer = SCANNER.nextLine().strip();
 
-            valid = isValidAccNumber(idToTransfer);
-            if (!valid){
-                System.out.printf(ERROR_MSG, "Invalid Account Number");
-                continue loop2;
-            }
-            for (int i = 0; i < accounts.length; i++) {
-                if (idToTransfer.equals(accounts[i][0]) ) {
-                    toIndex = i;
-                    break;
+                valid = isValidAccNumber(idToTransfer);
+                if (!valid) {
+                    System.out.printf(ERROR_MSG, "Invalid Account Number");
+                    continue loop2;
                 }
-            }
-            System.out.println("Name: " + accounts[toIndex][1]);
-            System.out.println("Current Account Balance: " + accounts[toIndex][2]);
-            }while(!valid);
+                for (int i = 0; i < accounts.length; i++) {
+                    if (idToTransfer.equals(accounts[i][0])) {
+                        toIndex = i;
+                        break;
+                    }
+                }
+                System.out.println("\tName: " + accounts[toIndex][1]);
+                System.out.println("\tCurrent Account Balance: " + accounts[toIndex][2]);
+            } while (!valid);
 
-            System.out.print("Enter amount to Transfer: ");
+            System.out.print("\tEnter amount to Transfer: ");
             double transferAmount = SCANNER.nextDouble();
             double sender = Double.parseDouble(accounts[index][2]);
-            sender-= (transferAmount+transferAmount*0.02);
+            sender -= (transferAmount + transferAmount * 0.02);
             double reciever = Double.parseDouble(accounts[toIndex][2]);
-            reciever+=transferAmount;
-            accounts[index][2]= sender+"";
-            accounts[toIndex][2]=reciever+"";
+            reciever += transferAmount;
+            accounts[index][2] = sender + "";
+            accounts[toIndex][2] = reciever + "";
 
-            System.out.printf("Sender's Account Number: %s\nSender's Name: %s\nSender's current Account Balance: %s\n", accounts[index][0],accounts[index][1],accounts[index][2]);
+            System.out.printf("\tSender's Account Number: %s\nSender's Name: %s\nSender's current Account Balance: %s\n",
+                    accounts[index][0], accounts[index][1], accounts[index][2]);
             System.out.println();
-            System.out.printf("Reciever's Account Number: %s\nReciever's Name: %s\nReciever's current Account Balance: %s\n", accounts[toIndex][0],accounts[toIndex][1],accounts[toIndex][2]);
-            
-            System.out.print("Do you want to continue?(Y/N): ");
+            System.out.printf(
+                    "\tReciever's Account Number: %s\nReciever's Name: %s\nReciever's current Account Balance: %s\n",
+                    accounts[toIndex][0], accounts[toIndex][1], accounts[toIndex][2]);
+
+            System.out.printf(SUCCESS_MSG, "Successfully transfered.");
+            System.out.println();
+
+            System.out.print("\tDo you want to continue?(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
             response = SCANNER.nextLine().strip().toUpperCase();
             valid = response.equals("Y");
+            System.out.println(CLEAR);
+            System.out.println("\t" + APP_TITLE + "\n");
 
-
-
-        }while(valid);
+        } while (valid);
     }
 
     private static void toWithdraw() {
         double withdraw;
         do {
             loop1: do {
-                System.out.print("Enter Account Number: ");
+                System.out.print("\tEnter Account Number: ");
                 id = SCANNER.nextLine().strip();
 
                 valid = isValidAccNumber(id);
-                if (!valid){
+                if (!valid) {
                     System.out.printf(ERROR_MSG, "Invalid Account Number");
                     continue loop1;
                 }
@@ -219,23 +274,23 @@ public class cliApp {
                         break;
                     }
                 }
-                System.out.println("Name: " + accounts[index][1]);
-                System.out.println("Current Account Balance: " + accounts[index][2]);
+                System.out.println("\tName: " + accounts[index][1]);
+                System.out.println("\tCurrent Account Balance: " + accounts[index][2]);
 
             } while (!valid);
 
             do {
                 valid = true;
-                System.out.print("Enter Withdraw Amount: ");
+                System.out.print("\tEnter Withdraw Amount: ");
                 withdraw = SCANNER.nextDouble();
                 SCANNER.nextLine();
                 if (withdraw < 100) {
-                    System.out.println("Minimum withdrawal amount should be Rs.100.");
+                    System.out.printf(ERROR_MSG, "Minimum withdrawal amount should be Rs.100");
                     valid = false;
                     continue;
                 }
                 if (Double.valueOf(accounts[index][2]) < 500) {
-                    System.out.println("Insuffcient account balance.");
+                    System.out.printf(ERROR_MSG, "Insuffcient account balance.");
                     valid = false;
                     continue;
                 }
@@ -243,11 +298,16 @@ public class cliApp {
 
             accounts[index][2] = (Double.valueOf(accounts[index][2]) - withdraw) + "";
 
-            System.out.println("New balance: " + accounts[index][2]);
+            System.out.println("\tNew balance: " + accounts[index][2]);
 
-            System.out.print("Do you want to continue?(Y/N): ");
+            System.out.printf(SUCCESS_MSG, "Withdrawn successful.");
+            System.out.println();
+
+            System.out.print("\tDo you want to continue?(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
             valid = response.equals("Y");
+            System.out.println(CLEAR);
+            System.out.println("\t" + APP_TITLE + "\n");
         } while (valid);
 
     }
@@ -256,11 +316,11 @@ public class cliApp {
 
         do {
             loop1: do {
-                System.out.print("Enter Account Number: ");
+                System.out.print("\tEnter Account Number: ");
                 id = SCANNER.nextLine().strip();
 
                 valid = isValidAccNumber(id);
-                if (!valid){
+                if (!valid) {
                     System.out.printf(ERROR_MSG, "Invalid Account Number");
                     continue loop1;
                 }
@@ -270,17 +330,17 @@ public class cliApp {
                         break;
                     }
                 }
-                System.out.println("Name: " + accounts[index][1]);
-                System.out.println("Current Account Balance: " + accounts[index][2]);
+                System.out.println("\tName: " + accounts[index][1]);
+                System.out.println("\tCurrent Account Balance: " + accounts[index][2]);
 
             } while (!valid);
             do {
                 valid = true;
-                System.out.print("Deposit amount: ");
+                System.out.print("\tDeposit amount: ");
                 deposit = SCANNER.nextDouble();
                 SCANNER.nextLine();
                 if (deposit < 500.00) {
-                    System.out.println("Insufficient amount. Minimum amount is 500.00.");
+                    System.out.printf(ERROR_MSG, "Insufficient amount. Minimum amount is 500.00");
                     valid = false;
                 }
 
@@ -288,11 +348,16 @@ public class cliApp {
 
             accounts[index][2] = (Double.parseDouble(accounts[index][2]) + deposit) + "";
 
-            System.out.println("New balance: " + accounts[index][2]);
+            System.out.println("\tNew balance: " + accounts[index][2]);
 
-            System.out.print("Do you want to continue(Y/N): ");
+            System.out.printf(SUCCESS_MSG, "Successfully deposited.");
+            System.out.println();
+
+            System.out.print("\tDo you want to continue(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
             valid = response.equals("Y");
+            System.out.println(CLEAR);
+            System.out.println("\t" + APP_TITLE + "\n");
 
         } while (valid);
 
@@ -311,7 +376,7 @@ public class cliApp {
                 break;
             } else {
                 for (int i = 0; i < accounts.length; i++) {
-                   
+
                     if (input.equals(accounts[i][0])) {
                         valid = true;
                         break;
@@ -376,7 +441,6 @@ public class cliApp {
             newAccounts[newAccounts.length - 1][2] = deposit + "";
 
             accounts = newAccounts;
-            // System.out.println(Arrays.toString(accounts[0]));
             genId++;
             System.out.printf(SUCCESS_MSG,
                     String.format("%s account has been created successfully", id));
@@ -384,9 +448,8 @@ public class cliApp {
             System.out.print("\tDo you want to continue adding (Y/N)?");
             response = SCANNER.nextLine().strip();
             response = SCANNER.nextLine().strip().toUpperCase();
-            // response="Y";
-
-            // Thread.sleep(5000);
+            System.out.println(CLEAR);
+            System.out.println("\t" + APP_TITLE + "\n");
 
         } while (response.equals("Y"));
 
