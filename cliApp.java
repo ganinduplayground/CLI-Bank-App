@@ -107,13 +107,15 @@ public class cliApp {
     private static void toCheckAccountBalance() {
 
         loop1: do {
-            valid = false;
+            valid = true;
             System.out.print("Enter Account Number: ");
             id = SCANNER.nextLine().strip();
 
             valid = isValidAccNumber(id);
-            if (!valid)
+            if (!valid){
+                 System.out.printf(ERROR_MSG, "Invalid Account Number");
                 continue loop1;
+            }
             for (int i = 0; i < accounts.length; i++) {
                 if (id.equals(accounts[i][0])) {
                     index = i;
@@ -123,11 +125,11 @@ public class cliApp {
             System.out.println("Name: " + accounts[index][1]);
             System.out.println("Current Account Balance: " + accounts[index][2]);
 
-            System.out.print("Do you want to go DashBoard?(Y/N): ");
+            System.out.print("Do you want to continue?(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
             valid = response.equals("Y");
 
-        } while (!valid);
+        } while (valid);
     }
 
     
@@ -143,8 +145,10 @@ public class cliApp {
             id = SCANNER.nextLine().strip();
 
             valid = isValidAccNumber(id);
-            if (!valid)
+            if (!valid){
+                System.out.printf(ERROR_MSG, "Invalid Account Number");
                 continue loop1;
+            }
             for (int i = 0; i < accounts.length; i++) {
                 if (id.equals(accounts[i][0])) {
                     index = i;
@@ -160,8 +164,10 @@ public class cliApp {
             idToTransfer = SCANNER.nextLine().strip();
 
             valid = isValidAccNumber(idToTransfer);
-            if (!valid)
+            if (!valid){
+                System.out.printf(ERROR_MSG, "Invalid Account Number");
                 continue loop2;
+            }
             for (int i = 0; i < accounts.length; i++) {
                 if (idToTransfer.equals(accounts[i][0]) ) {
                     toIndex = i;
@@ -185,14 +191,14 @@ public class cliApp {
             System.out.println();
             System.out.printf("Reciever's Account Number: %s\nReciever's Name: %s\nReciever's current Account Balance: %s\n", accounts[toIndex][0],accounts[toIndex][1],accounts[toIndex][2]);
             
-            System.out.print("Do you want to continue(Y/N): ");
+            System.out.print("Do you want to continue?(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
             response = SCANNER.nextLine().strip().toUpperCase();
             valid = response.equals("Y");
 
 
 
-        }while(!valid);
+        }while(valid);
     }
 
     private static void toWithdraw() {
@@ -203,8 +209,10 @@ public class cliApp {
                 id = SCANNER.nextLine().strip();
 
                 valid = isValidAccNumber(id);
-                if (!valid)
+                if (!valid){
+                    System.out.printf(ERROR_MSG, "Invalid Account Number");
                     continue loop1;
+                }
                 for (int i = 0; i < accounts.length; i++) {
                     if (id.equals(accounts[i][0])) {
                         index = i;
@@ -237,7 +245,7 @@ public class cliApp {
 
             System.out.println("New balance: " + accounts[index][2]);
 
-            System.out.print("Do you want to continue(Y/N): ");
+            System.out.print("Do you want to continue?(Y/N): ");
             String response = SCANNER.nextLine().strip().toUpperCase();
             valid = response.equals("Y");
         } while (valid);
@@ -252,8 +260,10 @@ public class cliApp {
                 id = SCANNER.nextLine().strip();
 
                 valid = isValidAccNumber(id);
-                if (!valid)
+                if (!valid){
+                    System.out.printf(ERROR_MSG, "Invalid Account Number");
                     continue loop1;
+                }
                 for (int i = 0; i < accounts.length; i++) {
                     if (id.equals(accounts[i][0])) {
                         index = i;
